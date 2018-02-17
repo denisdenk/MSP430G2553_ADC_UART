@@ -24,15 +24,15 @@ int main(void)
 
 	BCSCTL1 = CALBC1_1MHZ;            	// Set DCO to 1 MHz
 	DCOCTL = CALDCO_1MHZ;
-	BCSCTL2 &= ~(DIVS_3);				// SMCLK = DCO = 1MHz
-	P1SEL |= BIT3;						// Вход АЦП P1.3
+	BCSCTL2 &= ~(DIVS_3);			// SMCLK = DCO = 1MHz
+	P1SEL |= BIT3;				// Вход АЦП P1.3
 
 	ConfigureUART();
 	ConfigureADC();
 
-  while(1)                          	// While 1 is equal to 1 (forever)
+  while(1)                          	
   {
-	  	  __delay_cycles(10000);				// Wait for ADC Ref to settle
+	  	  __delay_cycles(10000);		// Wait for ADC Ref to settle
 	  	  ADC10CTL0 |= ENC + ADC10SC;
 	  	  __bis_SR_register(CPUOFF + GIE);
 	  	  ADC_value = ADC10MEM;
@@ -46,23 +46,23 @@ int main(void)
 #pragma vector=ADC10_VECTOR
 __interrupt void ADC10_ISR (void)
 {
-	__bic_SR_register_on_exit(CPUOFF);        // Return to active mode
+	__bic_SR_register_on_exit(CPUOFF);        	// Return to active mode
 }
 
-void UART_TX(char * tx_data) 			// Define a function which accepts a character pointer to an array
+void UART_TX(char * tx_data) 				// Define a function which accepts a character pointer to an array
 {
     unsigned int i=0;
     while(tx_data[i]) 					// Increment through array, look for null pointer (0) at end of string
     {
-        while ((UCA0STAT & UCBUSY)); 	// Wait if line TX/RX module is busy with data
-        UCA0TXBUF = tx_data[i]; 		// Send out element i of tx_data array on UART bus
-        i++; 							// Increment variable for array address
+        while ((UCA0STAT & UCBUSY)); 			// Wait if line TX/RX module is busy with data
+        UCA0TXBUF = tx_data[i]; 			// Send out element i of tx_data array on UART bus
+        i++; 						// Increment variable for array address
     }
 }
 
 void ConfigureADC(void)
 {
-	ADC10CTL1 = INCH_3 + ADC10DIV_3 ; // Channel 3, ADC10CLK/3
+	ADC10CTL1 = INCH_3 + ADC10DIV_3 ; 		// Channel 3, ADC10CLK/3
 	ADC10CTL0 = SREF_0 + ADC10SHT_3 + ADC10ON + ADC10IE; // Vcc & Vss as reference, Sample and hold for 64 Clock cycles, ADC on, ADC interrupt enable
 	ADC10AE0 |= BIT3;
 }
@@ -78,5 +78,5 @@ void ConfigureUART(void)
 	UCA0BR1 = 0;                      	//
 
 	UCA0MCTL = UCBRS0;                	// Modulation UCBRSx = 1
-	UCA0CTL1 &= ~UCSWRST;               // Start USCI state machine
+	UCA0CTL1 &= ~UCSWRST;               	// Start USCI state machine
 }
