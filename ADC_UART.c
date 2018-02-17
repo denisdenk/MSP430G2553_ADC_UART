@@ -32,13 +32,13 @@ int main(void)
 
   while(1)                          	
   {
-	  	  __delay_cycles(10000);		// Wait for ADC Ref to settle
-	  	  ADC10CTL0 |= ENC + ADC10SC;
-	  	  __bis_SR_register(CPUOFF + GIE);
-	  	  ADC_value = ADC10MEM;
+	__delay_cycles(10000);		// Wait for ADC Ref to settle
+	ADC10CTL0 |= ENC + ADC10SC;
+	__bis_SR_register(CPUOFF + GIE);
+	ADC_value = ADC10MEM;
 
-	  	  sprintf(Buf, "ADC: %d\r\n", ADC_value);
-          UART_TX(Buf);
+	sprintf(Buf, "ADC: %d\r\n", ADC_value);
+	UART_TX(Buf);
   }
 
 }
